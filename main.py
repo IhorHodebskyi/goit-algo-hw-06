@@ -39,7 +39,7 @@ class Record:
     def edit_phone(self, old_phone, new_phone):
         for p in self.phones:
             if p.value == old_phone:
-                p.value = new_phone
+                p.value = str(Phone(new_phone))
                 return
         raise ValueError("Phone number not found.")
 
@@ -48,6 +48,14 @@ class Record:
             if p.value == phone:
                 return p
         return None
+
+    def remove_phone(self, phone):
+        for p in self.phones:
+            if p.value == phone:
+                self.phones.remove(p)
+                return ("Phone number remove")
+        raise ValueError("Phone number not found.")
+
 
 
 
@@ -68,9 +76,15 @@ class AddressBook(UserDict):
         if name in self.data:
             del self.data[name]
 
+    def __str__(self):
+        if not self.data:
+            return "Address book is empty."
 
+        result = ["Address Book:"]
+        for record in self.data.values():
+            result.append(str(record))
 
-
+        return "\n".join(result)
 
 
 # Створення нової адресної книги
@@ -101,7 +115,15 @@ print(john)  # Виведення: Contact name: John, phones: 1112223333; 55555
 found_phone = john.find_phone("5555555555")
 print(f"{john.name}: {found_phone}")  # Виведення: John: 5555555555
 
+
+record = Record("Alice")
+record.add_phone("2222222222")
+record.add_phone("1111111111")
+print(record.remove_phone("1111111111"))
+print("Before removal:", record)
 # Видалення запису Jane
 book.delete("Jane")
+
+
 print(book)
 
